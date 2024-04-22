@@ -3,7 +3,7 @@ package inmem
 import (
 	"context"
 
-	"github.com/quolpr/booking/internal/app/transaction"
+	"github.com/quolpr/booking/internal/pkg/transaction"
 )
 
 var _ transaction.Transaction = &Transaction{}

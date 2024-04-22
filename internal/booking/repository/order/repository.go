@@ -4,10 +4,11 @@ import (
 	"context"
 	"sync"
 
+	"github.com/quolpr/booking/internal/pkg/transaction"
+
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/repository"
 
-	"github.com/quolpr/booking/internal/app/transaction"
 	"github.com/quolpr/booking/pkg/randomstr"
 )
 

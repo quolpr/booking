@@ -5,6 +5,9 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/quolpr/booking/internal/pkg/transaction"
+	"github.com/quolpr/booking/internal/pkg/transaction/inmem"
+
 	orderHandlers "github.com/quolpr/booking/internal/booking/httpapi/v1/order"
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/repository"
@@ -15,8 +18,6 @@ import (
 	"github.com/quolpr/booking/internal/booking/validator"
 	orderValidator "github.com/quolpr/booking/internal/booking/validator/order"
 
-	"github.com/quolpr/booking/internal/app/transaction"
-	"github.com/quolpr/booking/internal/app/transaction/inmem"
 	"github.com/quolpr/booking/pkg/days"
 )
 

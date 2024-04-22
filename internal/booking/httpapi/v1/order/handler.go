@@ -5,12 +5,13 @@ import (
 	"errors"
 	"net/http"
 
+	jsonresp2 "github.com/quolpr/booking/internal/pkg/jsonresp"
+
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/service"
 	"github.com/quolpr/booking/internal/booking/validator"
 
 	"github.com/quolpr/booking/internal/app/appctx"
-	"github.com/quolpr/booking/internal/app/jsonresp"
 )
 
 type Handlers struct {
@@ -21,23 +22,23 @@ func NewHandlers(orderCreator service.OrderCreator) *Handlers {
 	return &Handlers{orderCreator: orderCreator}
 }
 
-func (h *Handlers) CreateOrder(r *http.Request) (jsonresp.JSONResp, error) {
+func (h *Handlers) CreateOrder(r *http.Request) (jsonresp2.JSONResp, error) {
 	logger, err := appctx.GetLogger(r.Context())
 	if err != nil {
-		return jsonresp.JSONResp{}, err
+		return jsonresp2.JSONResp{}, err
 	}
 
 	var newOrder model.Order
 
 	err = json.NewDecoder(r.Body).Decode(&newOrder)
 	if err != nil {
-		return jsonresp.JSONResp{}, &jsonresp.JSONError{Type: "decode_failed", StatusCode: http.StatusBadRequest, Err: err}
+		return jsonresp2.JSONResp{}, &jsonresp2.JSONError{Type: "decode_failed", StatusCode: http.StatusBadRequest, Err: err}
 	}
 
 	result, err := h.orderCreator.Create(r.Context(), newOrder)
 	var validationErr *validator.ValidationMsgError
 	if err != nil && errors.As(err, &validationErr) {
-		return jsonresp.JSONResp{}, &jsonresp.JSONError{
+		return jsonresp2.JSONResp{}, &jsonresp2.JSONError{
 			Type:       "validation_failed",
 			StatusCode: http.StatusBadRequest,
 			Payload:    validationErr.Msgs,
@@ -46,7 +47,7 @@ func (h *Handlers) CreateOrder(r *http.Request) (jsonresp.JSONResp, error) {
 	} else if err != nil {
 		logger.Warn("Failed to create order", "err", err)
 
-		return jsonresp.JSONResp{}, &jsonresp.JSONError{
+		return jsonresp2.JSONResp{}, &jsonresp2.JSONError{
 			Type:       "unknown",
 			StatusCode: http.StatusBadRequest,
 			Payload:    err.Error(),
@@ -54,7 +55,7 @@ func (h *Handlers) CreateOrder(r *http.Request) (jsonresp.JSONResp, error) {
 		}
 	}
 
-	return jsonresp.JSONResp{
+	return jsonresp2.JSONResp{
 		Body:       result,
 		StatusCode: http.StatusCreated,
 	}, errors.New("not implemented")

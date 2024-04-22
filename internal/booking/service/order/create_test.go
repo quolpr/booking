@@ -5,6 +5,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/quolpr/booking/internal/pkg/transaction"
+	"github.com/quolpr/booking/internal/pkg/transaction/inmem"
+
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/repository"
 	"github.com/quolpr/booking/internal/booking/repository/availability"
@@ -14,8 +17,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/quolpr/booking/internal/app/transaction"
-	"github.com/quolpr/booking/internal/app/transaction/inmem"
 	"github.com/quolpr/booking/pkg/days"
 )
 

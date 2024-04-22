@@ -6,8 +6,9 @@ import (
 	"log/slog"
 	"net/http"
 
+	jsonresp2 "github.com/quolpr/booking/internal/pkg/jsonresp"
+
 	"github.com/quolpr/booking/internal/app/appctx"
-	"github.com/quolpr/booking/internal/app/jsonresp"
 )
 
 type jsonWriter struct {
@@ -25,7 +26,7 @@ func (j *jsonWriter) writeJSON(code int, data any) {
 	}
 }
 
-func ErrorHandler(h func(r *http.Request) (jsonresp.JSONResp, error)) func(w http.ResponseWriter, r *http.Request) {
+func ErrorHandler(h func(r *http.Request) (jsonresp2.JSONResp, error)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, err := appctx.GetLogger(r.Context())
 		if err != nil {
@@ -37,7 +38,7 @@ func ErrorHandler(h func(r *http.Request) (jsonresp.JSONResp, error)) func(w htt
 
 		res, err := h(r)
 
-		var jsonErr *jsonresp.JSONError
+		var jsonErr *jsonresp2.JSONError
 
 		if errors.As(err, &jsonErr) {
 			logger.Info("Json error happened", "err", err.Error())
@@ -47,7 +48,7 @@ func ErrorHandler(h func(r *http.Request) (jsonresp.JSONResp, error)) func(w htt
 		} else if err != nil {
 			logger.Error("Error happened", "err", err)
 
-			jsonWriter.writeJSON(http.StatusInternalServerError, jsonresp.JSONError{Type: "internal_error"})
+			jsonWriter.writeJSON(http.StatusInternalServerError, jsonresp2.JSONError{Type: "internal_error"})
 			return
 		}
 
