@@ -19,7 +19,7 @@ func main() {
 
 	logger := app.Logger()
 
-	availabilityRepo := app.ServiceProvider.AvailabilityRepo
+	booking := app.ServiceProvider.Booking
 
 	avail := []model.RoomAvailability{
 		{HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 1), Quota: 1},
@@ -30,7 +30,10 @@ func main() {
 	}
 
 	for _, av := range avail {
-		availabilityRepo.Create(ctx, av)
+		_, err := booking.CreateAvailability(ctx, av)
+		if err != nil {
+			panic("Failed to seed availability")
+		}
 	}
 
 	err := app.ServeHTTP(ctx)

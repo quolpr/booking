@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/quolpr/booking/internal/pkg/transaction"
+	"github.com/quolpr/booking/internal/transaction"
 )
 
 type App struct {

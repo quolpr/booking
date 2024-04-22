@@ -3,7 +3,7 @@ package app
 import (
 	"net/http"
 
-	"github.com/quolpr/booking/internal/pkg/jsonresp"
+	"github.com/quolpr/booking/internal/jsonresp"
 
 	"github.com/quolpr/booking/internal/app/middleware"
 )

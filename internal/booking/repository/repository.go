@@ -22,5 +22,5 @@ type AvailabilityRepo interface {
 	GetUnavailableDays(ctx context.Context, hotelID, roomID string, from, to time.Time) ([]time.Time, error)
 	DecreaseQuotasByDate(ctx context.Context, hotelID, roomID string, from, to time.Time) ([]model.RoomAvailability, error)
 	IncreaseQuotasByIds(ctx context.Context, hotelID, roomID string, ids []string)
-	Create(ctx context.Context, av model.RoomAvailability)
+	Create(ctx context.Context, av model.RoomAvailability) (model.RoomAvailability, error)
 }

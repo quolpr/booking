@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/quolpr/booking/internal/pkg/transaction"
-	"github.com/quolpr/booking/internal/pkg/transaction/inmem"
+	"github.com/quolpr/booking/internal/transaction"
+	"github.com/quolpr/booking/internal/transaction/inmem"
 
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/repository"

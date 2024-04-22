@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/quolpr/booking/internal/pkg/transaction"
+	"github.com/quolpr/booking/internal/transaction"
 
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/repository"
@@ -46,7 +46,7 @@ func NewRepo(ctx context.Context) *Repo {
 	return r
 }
 
-func (r *Repo) Create(_ context.Context, av model.RoomAvailability) {
+func (r *Repo) Create(_ context.Context, av model.RoomAvailability) (model.RoomAvailability, error) {
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
@@ -58,6 +58,8 @@ func (r *Repo) Create(_ context.Context, av model.RoomAvailability) {
 		roomID:  av.RoomID,
 		date:    av.Date,
 	}] = av.ID
+
+	return av, nil
 }
 
 func (r *Repo) Get(ctx context.Context, id string) (model.RoomAvailability, error) {

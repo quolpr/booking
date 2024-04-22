@@ -5,16 +5,14 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/quolpr/booking/internal/pkg/transaction"
-	"github.com/quolpr/booking/internal/pkg/transaction/inmem"
+	"github.com/quolpr/booking/internal/booking"
+	orderHandlers "github.com/quolpr/booking/internal/httpapi/order/v1"
+	"github.com/quolpr/booking/internal/transaction"
+	"github.com/quolpr/booking/internal/transaction/inmem"
 
-	orderHandlers "github.com/quolpr/booking/internal/booking/httpapi/order/v1"
-	"github.com/quolpr/booking/internal/booking/repository"
 	"github.com/quolpr/booking/internal/booking/repository/availability"
 	orderRepo "github.com/quolpr/booking/internal/booking/repository/order"
-	"github.com/quolpr/booking/internal/booking/service"
 	orderSvc "github.com/quolpr/booking/internal/booking/service/order"
-	"github.com/quolpr/booking/internal/booking/validator"
 	orderValidator "github.com/quolpr/booking/internal/booking/validator/order"
 )
 
@@ -24,12 +22,7 @@ type serviceProvider struct {
 
 	OrdersHandler *orderHandlers.Handlers
 
-	OrdersRepo       repository.OrdersRepo
-	AvailabilityRepo repository.AvailabilityRepo
-
-	CreateOrderService service.OrderCreator
-
-	CreationOrderValidator validator.OrderCreationValidator
+	Booking *booking.Domain
 }
 
 func newServiceProvider(ctx context.Context, _ *config) *serviceProvider {
@@ -39,13 +32,12 @@ func newServiceProvider(ctx context.Context, _ *config) *serviceProvider {
 	createOrderValidator := orderValidator.NewCreateValidator(availabilityRepo)
 	createOrderService := orderSvc.NewCreator(availabilityRepo, ordersRepo, createOrderValidator)
 
+	bookingDomain := booking.NewDomain(ordersRepo, availabilityRepo, createOrderService)
+
 	return &serviceProvider{
-		Logger:                 logger,
-		TrManager:              &inmem.TransactionManager{},
-		OrdersHandler:          orderHandlers.NewHandlers(createOrderService),
-		OrdersRepo:             ordersRepo,
-		AvailabilityRepo:       availabilityRepo,
-		CreateOrderService:     createOrderService,
-		CreationOrderValidator: createOrderValidator,
+		Logger:        logger,
+		TrManager:     &inmem.TransactionManager{},
+		OrdersHandler: orderHandlers.NewHandlers(bookingDomain),
+		Booking:       bookingDomain,
 	}
 }
