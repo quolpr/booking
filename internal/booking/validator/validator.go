@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/quolpr/booking/internal/model"
+	"github.com/quolpr/booking/internal/booking/model"
 )
 
 var ErrValidation = errors.New("validation error")

@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/quolpr/booking/internal/model"
+	"github.com/quolpr/booking/internal/booking/model"
 )
 
 type OrderCreator interface {

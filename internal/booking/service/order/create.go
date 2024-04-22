@@ -3,11 +3,12 @@ package order
 import (
 	"context"
 
+	"github.com/quolpr/booking/internal/booking/model"
+	"github.com/quolpr/booking/internal/booking/repository"
+	"github.com/quolpr/booking/internal/booking/service"
+	"github.com/quolpr/booking/internal/booking/validator"
+
 	"github.com/quolpr/booking/internal/app/transaction"
-	"github.com/quolpr/booking/internal/model"
-	"github.com/quolpr/booking/internal/repository"
-	"github.com/quolpr/booking/internal/service"
-	"github.com/quolpr/booking/internal/validator"
 )
 
 var _ service.OrderCreator = (*Creator)(nil)

@@ -5,11 +5,12 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/quolpr/booking/internal/booking/model"
+	"github.com/quolpr/booking/internal/booking/service"
+	"github.com/quolpr/booking/internal/booking/validator"
+
 	"github.com/quolpr/booking/internal/app/appctx"
 	"github.com/quolpr/booking/internal/app/jsonresp"
-	"github.com/quolpr/booking/internal/model"
-	"github.com/quolpr/booking/internal/service"
-	"github.com/quolpr/booking/internal/validator"
 )
 
 type Handlers struct {

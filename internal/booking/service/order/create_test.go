@@ -5,18 +5,18 @@ import (
 	"testing"
 	"time"
 
+	"github.com/quolpr/booking/internal/booking/model"
+	"github.com/quolpr/booking/internal/booking/repository"
+	"github.com/quolpr/booking/internal/booking/repository/availability"
+	"github.com/quolpr/booking/internal/booking/repository/order"
+	"github.com/quolpr/booking/internal/booking/validator"
+	orderValidator "github.com/quolpr/booking/internal/booking/validator/order"
+
 	"github.com/stretchr/testify/assert"
 
 	"github.com/quolpr/booking/internal/app/transaction"
 	"github.com/quolpr/booking/internal/app/transaction/inmem"
-	"github.com/quolpr/booking/internal/model"
-	"github.com/quolpr/booking/internal/repository"
-	"github.com/quolpr/booking/internal/repository/availability"
-	"github.com/quolpr/booking/internal/repository/order"
-	"github.com/quolpr/booking/internal/validator"
 	"github.com/quolpr/booking/pkg/days"
-
-	orderValidator "github.com/quolpr/booking/internal/validator/order"
 )
 
 type TestingCase struct {

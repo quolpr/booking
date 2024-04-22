@@ -5,9 +5,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/quolpr/booking/internal/booking/model"
+	"github.com/quolpr/booking/internal/booking/repository"
+
 	"github.com/quolpr/booking/internal/app/transaction"
-	"github.com/quolpr/booking/internal/model"
-	"github.com/quolpr/booking/internal/repository"
 	"github.com/quolpr/booking/pkg/days"
 	"github.com/quolpr/booking/pkg/randomstr"
 )

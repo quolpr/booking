@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/quolpr/booking/internal/model"
+	"github.com/quolpr/booking/internal/booking/model"
 )
 
 var ErrNotFound = errors.New("not found")

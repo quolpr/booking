@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/quolpr/booking/internal/model"
-	"github.com/quolpr/booking/internal/validator"
+	"github.com/quolpr/booking/internal/booking/model"
+	"github.com/quolpr/booking/internal/booking/validator"
 )
 
 type unavailableDaysGetter interface {

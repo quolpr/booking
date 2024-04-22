@@ -5,17 +5,18 @@ import (
 	"log/slog"
 	"os"
 
+	orderHandlers "github.com/quolpr/booking/internal/booking/httpapi/v1/order"
+	"github.com/quolpr/booking/internal/booking/model"
+	"github.com/quolpr/booking/internal/booking/repository"
+	"github.com/quolpr/booking/internal/booking/repository/availability"
+	orderRepo "github.com/quolpr/booking/internal/booking/repository/order"
+	"github.com/quolpr/booking/internal/booking/service"
+	orderSvc "github.com/quolpr/booking/internal/booking/service/order"
+	"github.com/quolpr/booking/internal/booking/validator"
+	orderValidator "github.com/quolpr/booking/internal/booking/validator/order"
+
 	"github.com/quolpr/booking/internal/app/transaction"
 	"github.com/quolpr/booking/internal/app/transaction/inmem"
-	orderHandlers "github.com/quolpr/booking/internal/httpapi/v1/order"
-	"github.com/quolpr/booking/internal/model"
-	"github.com/quolpr/booking/internal/repository"
-	"github.com/quolpr/booking/internal/repository/availability"
-	orderRepo "github.com/quolpr/booking/internal/repository/order"
-	"github.com/quolpr/booking/internal/service"
-	orderSvc "github.com/quolpr/booking/internal/service/order"
-	"github.com/quolpr/booking/internal/validator"
-	orderValidator "github.com/quolpr/booking/internal/validator/order"
 	"github.com/quolpr/booking/pkg/days"
 )
 
