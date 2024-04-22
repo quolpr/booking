@@ -15,11 +15,11 @@ func newRoutes(serviceProvider *serviceProvider) *http.ServeMux {
 		return middleware.Logger(
 			middleware.PanicRecover(
 				middleware.ErrorHandler(h),
-			), serviceProvider.logger,
+			), serviceProvider.Logger,
 		)
 	}
 
-	mux.HandleFunc("POST /v1/orders", applyMiddleware(serviceProvider.ordersHandler.CreateOrder))
+	mux.HandleFunc("POST /v1/orders", applyMiddleware(serviceProvider.OrdersHandler.CreateOrder))
 
 	return mux
 }

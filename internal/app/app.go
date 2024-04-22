@@ -13,7 +13,7 @@ import (
 )
 
 type App struct {
-	serviceProvider *serviceProvider
+	ServiceProvider *serviceProvider
 	config          *config
 }
 
@@ -21,26 +21,26 @@ func NewApp(ctx context.Context) *App {
 	config := newConfig()
 
 	return &App{
-		serviceProvider: newServiceProvider(ctx, config),
+		ServiceProvider: newServiceProvider(ctx, config),
 		config:          config,
 	}
 }
 
 func (app *App) Logger() *slog.Logger {
-	return app.serviceProvider.logger
+	return app.ServiceProvider.Logger
 }
 
 func (app *App) ServeHTTP(ctx context.Context) error {
-	logger := app.serviceProvider.logger
+	logger := app.ServiceProvider.Logger
 
 	httpServer := &http.Server{
 		Addr:         fmt.Sprintf(":%s", app.config.port),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
-		Handler:      newRoutes(app.serviceProvider),
+		Handler:      newRoutes(app.ServiceProvider),
 		BaseContext: func(listener net.Listener) context.Context {
 			ctx := context.Background()
-			ctx = transaction.WithTransactionManager(ctx, app.serviceProvider.trManager)
+			ctx = transaction.WithTransactionManager(ctx, app.ServiceProvider.TrManager)
 			return ctx
 		},
 	}

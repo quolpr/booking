@@ -58,5 +58,5 @@ func (h *Handlers) CreateOrder(r *http.Request) (jsonresp2.JSONResp, error) {
 	return jsonresp2.JSONResp{
 		Body:       result,
 		StatusCode: http.StatusCreated,
-	}, errors.New("not implemented")
+	}, nil
 }

@@ -3,6 +3,8 @@
 # It was taken from https://github.com/grafana/k6/blob/master/.golangci.yml
 run:
   deadline: 5m
+  skip-dirs:
+    - cmd/original
 
 issues:
   # Maximum issues count per one linter. Set to 0 to disable. Default is 50.
