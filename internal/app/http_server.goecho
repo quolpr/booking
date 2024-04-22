@@ -1,0 +1,103 @@
+package app
+
+import (
+	"context"
+	"log/slog"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/quolpr/booking/internal/app/appctx"
+	"github.com/quolpr/booking/internal/http_api"
+)
+
+func registerRoutes(provider *serviceProvider, e *echo.Echo) {
+	ordersHandler := http_api.NewOrderHandlers()
+
+	e.POST("/orders", ordersHandler.CreateOrder)
+}
+
+func StartHttpServer(provider *serviceProvider, port string) *echo.Echo {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
+
+	e := build(provider, ctx)
+
+	registerRoutes(provider, e)
+
+	go func() {
+		if err := e.Start(":" + port); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server")
+		}
+	}()
+
+	<-ctx.Done()
+
+	e.Logger.Info("Starting graceful shutdown")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	return e
+}
+
+
+func build(provider *serviceProvider, ctx context.Context) *echo.Echo {
+	logger := provider.logger
+
+	e := echo.New()
+
+	e.Use(middleware.RequestID())
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogStatus:   true,
+		LogURI:      true,
+		LogError:    true,
+		HandleError: true, // forwards error to the global error handler, so it can decide appropriate status code
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			if v.Error == nil {
+				logger.LogAttrs(ctx, slog.LevelInfo, "REQUEST",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+				)
+			} else {
+				logger.LogAttrs(ctx, slog.LevelError, "REQUEST_ERROR",
+					slog.String("uri", v.URI),
+					slog.Int("status", v.Status),
+					slog.String("err", v.Error.Error()),
+				)
+			}
+			return nil
+		},
+	}))
+	e.Use(middleware.Recover())
+	e.Use(middleware.TimeoutWithConfig(
+		middleware.TimeoutConfig{
+			Skipper:      middleware.DefaultSkipper,
+			Timeout:      30 * time.Second,
+			ErrorMessage: "",
+		},
+	))
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			ctx := c.Request().Context()
+			reqId := c.Response().Header().Get(echo.HeaderXRequestID)
+
+			ctx = appctx.WithRequestId(ctx, reqId)
+			ctx = appctx.WithLogger(ctx, logger)
+
+			c.SetRequest(c.Request().WithContext(ctx))
+
+			return next(c)
+		}
+	})
+
+	return e
+}
+
