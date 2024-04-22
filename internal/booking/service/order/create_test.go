@@ -74,11 +74,13 @@ func testCreateWorks(t *testing.T, setupFunc func() TestingCase) {
 	ctx := setup.ctx
 
 	avail := []model.RoomAvailability{
-		{HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 1), Quota: 2},
-		{HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 2), Quota: 1},
+		{ID: "123", HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 1), Quota: 2},
+		{ID: "456", HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 2), Quota: 1},
 	}
 	for _, av := range avail {
-		setup.availRepo.Create(ctx, av)
+		_, err := setup.availRepo.Create(ctx, av)
+
+		assert.Nil(t, err)
 	}
 
 	_, err := setup.svc.Create(setup.ctx, model.Order{
@@ -111,5 +113,13 @@ func testCreateWorks(t *testing.T, setupFunc func() TestingCase) {
 				days.Date(2024, 1, 2),
 			}},
 		}},
+	)
+	res, err := setup.availRepo.GetAll(ctx)
+	assert.Nil(t, err)
+	assert.Equal(t, res,
+		[]model.RoomAvailability{
+			{ID: "123", HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 1), Quota: 1},
+			{ID: "456", HotelID: "reddison", RoomID: "lux", Date: days.Date(2024, 1, 2), Quota: 0},
+		},
 	)
 }

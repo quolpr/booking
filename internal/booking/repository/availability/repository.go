@@ -50,7 +50,9 @@ func (r *Repo) Create(_ context.Context, av model.RoomAvailability) (model.RoomA
 	r.lock.Lock()
 	defer r.lock.Unlock()
 
-	av.ID = randomstr.Generate(20)
+	if av.ID == "" {
+		av.ID = randomstr.Generate(20)
+	}
 
 	r.availability[av.ID] = av
 	r.availabilityIndex[availableKey{
