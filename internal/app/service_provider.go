@@ -8,7 +8,7 @@ import (
 	"github.com/quolpr/booking/internal/pkg/transaction"
 	"github.com/quolpr/booking/internal/pkg/transaction/inmem"
 
-	orderHandlers "github.com/quolpr/booking/internal/booking/httpapi/v1/order"
+	orderHandlers "github.com/quolpr/booking/internal/booking/httpapi/order/v1"
 	"github.com/quolpr/booking/internal/booking/model"
 	"github.com/quolpr/booking/internal/booking/repository"
 	"github.com/quolpr/booking/internal/booking/repository/availability"
